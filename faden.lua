@@ -54,7 +54,7 @@ local function programm_ausfuhren(faden)
 	return not faden.stopped and programm_ausfuhren(faden)
 end
 
-return function (faden_manip, parsed)
+return function(faden_manip, parsed)
 	local faden = {
 		log = "",
 		ip = 1,
