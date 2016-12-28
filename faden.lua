@@ -29,11 +29,12 @@ local function befehl_ausfuhren(faden)
 				end
 				for i,v in pairs(ergebnis) do
 					if not ersetzbar[i] then
-						return false, "Attempt on changing an immediate"
+						-- message sometimes incorrect
+						return false, "Command " .. befehl .. ": Attempt on changing an immediate"
 					end
 					if not args[i] then
-						-- FIXME
-						error"[pdisc] instruction set attempt to write in void"
+						-- can this happen? Is it a mistake in instruction set? bef ,b,,d
+						return false, "Command " .. befehl .. ": Missing target argument"
 					end
 					vars[args[i]] = v
 				end
@@ -51,7 +52,7 @@ end
 local function programm_ausfuhren(faden)
 	local weiter,msg = befehl_ausfuhren(faden)
 	if not weiter then
-		faden.log = faden.log .. "Aborted: " .. msg .. "\n"
+		faden.log = faden.log .. "Aborted (" .. faden.ip .. "): " .. msg .. "\n"
 		faden:exit()
 		return
 	end

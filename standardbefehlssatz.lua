@@ -192,6 +192,10 @@ s = {
 		return true
 	end,
 
+	get_us_time = function()
+		return true, minetest.get_us_time()
+	end,
+
 	tostring = function(params)
 		if #params ~= 1 then
 			return false, WNOA
