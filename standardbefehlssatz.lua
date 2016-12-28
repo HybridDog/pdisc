@@ -4,7 +4,7 @@ local SE = "error with cmd-cmd executing: "
 
 local s
 s = {
-	mov = function(params, faden)
+	mov = function(params)
 		if #params ~= 2 then
 			return false, WNOA
 		end
@@ -95,14 +95,14 @@ s = {
 		return true, rt
 	end,
 
-	equal = function(params, faden)
+	equal = function(params)
 		if #params ~= 2 then
 			return false, WNOA
 		end
 		return true, params[1] == params[2]
 	end,
 
-	less = function(params, faden)
+	less = function(params)
 		if #params ~= 2 then
 			return false, WNOA
 		end
