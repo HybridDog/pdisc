@@ -26,12 +26,12 @@ local function mystart(parsed_code)
 			return true
 		end
 	end, parsed_code)
-	mykeepalive()
+	mykeepalive(thread)
 end
 
 mystart(parsed_code)
 
-local function mykeepalive()
+local function mykeepalive(thread)
 	thread:suscitate()
 	if not thread.stopped then
 		return

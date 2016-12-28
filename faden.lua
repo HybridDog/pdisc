@@ -4,7 +4,7 @@ local function befehl_ausfuhren(faden)
 	local vars = faden.vars
 	local befehl, args = unpack(faden.liste[faden.ip])
 	for i = 1,#is do
-		local bfunk = is[i]
+		local bfunk = is[i][befehl]
 		if bfunk then
 			local fa = {}
 			local ersetzbar = {}
@@ -31,6 +31,10 @@ local function befehl_ausfuhren(faden)
 					if not ersetzbar[i] then
 						return false, "Attempt on changing an immediate"
 					end
+					if not args[i] then
+						-- FIXME
+						error"[pdisc] instruction set attempt to write in void"
+					end
 					vars[args[i]] = v
 				end
 			end
@@ -48,7 +52,7 @@ local function programm_ausfuhren(faden)
 	local weiter,msg = befehl_ausfuhren(faden)
 	if not weiter then
 		faden.log = faden.log .. "Aborted: " .. msg .. "\n"
-		faden.exit()
+		faden:exit()
 		return
 	end
 	return not faden.stopped and programm_ausfuhren(faden)
@@ -57,6 +61,7 @@ end
 return function(faden_manip, parsed)
 	local faden = {
 		log = "",
+		vars = {pi = math.pi},
 		ip = 1,
 		sp = 50,
 		sb = 50,
@@ -76,7 +81,7 @@ return function(faden_manip, parsed)
 			self:suscitate()
 		end,
 		try_rebirth = function(self)
-			if minetest.get_gametime() < self.rebirth then
+			if minetest.get_gametime() >= self.rebirth then
 				self:continue()
 			end
 		end,

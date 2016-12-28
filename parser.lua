@@ -13,7 +13,7 @@ local function parse_zeile(marken, imms, z, zn)
 	-- Marke erkennen
 	local marke = z:find":"
 	if marke then
-		mname = z:sub(1, marke - 1)
+		local mname = z:sub(1, marke - 1)
 		marken[mname] = zn
 
 		z = z:sub(marke+1):trim()
@@ -61,15 +61,20 @@ return function(programm)
 	local marken = {}
 
 	-- Programm erkennen
-	local liste = programm:split"\n"
-	local zn = #liste
-	for i = 1,zn do
-		liste[i] = parse_zeile(marken, imms, liste[i], i)
+	local zeilen = programm:split"\n"
+	local anz = 0
+	local liste = {}
+	for i = 1,#zeilen do
+		local befehl = parse_zeile(marken, imms, zeilen[i], i)
+		if befehl[1] then
+			anz = anz + 1
+			liste[anz] = befehl
+		end
 	end
 	local immn = #imms+1
 
 	-- Marken durch immediates ersetzen
-	for i = 1,zn do
+	for i = 1,anz do
 		local args = liste[i][2]
 		if args then
 			for i = 1,#args do
