@@ -82,7 +82,7 @@ return function(faden_manip, parsed)
 			self:suscitate()
 		end,
 		try_rebirth = function(self)
-			if minetest.get_gametime() >= self.rebirth then
+			if minetest.get_us_time() >= self.rebirth then
 				self:continue()
 			end
 		end,

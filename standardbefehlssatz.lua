@@ -106,7 +106,7 @@ s = {
 			return false, "jump target out of range"
 		end
 		faden.ip = p-1
-		if not s.sleep({0}, faden) then
+		if not s.usleep({0}, faden) then
 			error(SE)
 		end
 		return true
@@ -179,7 +179,7 @@ s = {
 		return true, params[1] < params[2]
 	end,
 
-	sleep = function(params, faden)
+	usleep = function(params, faden)
 		if #params ~= 1 then
 			return false, WNOA
 		end
@@ -187,7 +187,7 @@ s = {
 		if type(p) ~= "number" then
 			return false, UAT
 		end
-		faden.rebirth = minetest.get_gametime() + p
+		faden.rebirth = minetest.get_us_time() + p
 		faden:stop()
 		return true
 	end,
