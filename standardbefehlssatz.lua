@@ -201,16 +201,12 @@ s = {
 		if #params ~= 2 then
 			return false, WNOA
 		end
-		local t1 = type(p1)
-		local t2 = type(p2)
-		if t1 ~= t2 then
-			return false, "different argument types"
-		end
-		if t1 ~= "number"
-		and t1 ~= "string" then
+		local p1,p2 = unpack(params)
+		if type(p1) ~= "number"
+		or type(p2) ~= "number" then
 			return false, UAT
 		end
-		return true, params[1] < params[2]
+		return true, p1 < p2
 	end,
 
 	usleep = function(params, faden)
