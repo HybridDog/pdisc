@@ -100,7 +100,12 @@ s = {
 	end,
 
 	jmp = function(params, faden)
-		if #params ~= 1 then
+		local pcnt = #params
+		if pcnt == 2 then
+			if not params[2] then
+				return true
+			end
+		elseif pcnt ~= 1 then
 			return false, WNOA
 		end
 		local p = params[1]
@@ -115,19 +120,6 @@ s = {
 		faden.ip = p-1
 		if not s.usleep({0}, faden) then
 			error(SE)
-		end
-		return true
-	end,
-
-	jif = function(params, faden)
-		if #params ~= 2 then
-			return false, WNOA
-		end
-		if params[1] then
-			local jmpd,msg = s.jmp({params[2]}, faden)
-			if not jmpd then
-				return false, SE .. msg
-			end
 		end
 		return true
 	end,
