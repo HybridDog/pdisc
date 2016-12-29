@@ -1,4 +1,4 @@
-local function parse_zeile(marken, imms, z, zn)
+local function parse_zeile(marken, imms, z, ip)
 	-- Kommentar entfernen
 	local komment = z:find";"
 	if komment then
@@ -14,7 +14,7 @@ local function parse_zeile(marken, imms, z, zn)
 	local marke = z:find":"
 	if marke then
 		local mname = z:sub(1, marke - 1)
-		marken[mname] = zn
+		marken[mname] = ip
 
 		z = z:sub(marke+1):trim()
 		if #z == 0 then
@@ -65,7 +65,7 @@ return function(programm)
 	local anz = 0
 	local liste = {}
 	for i = 1,#zeilen do
-		local befehl = parse_zeile(marken, imms, zeilen[i], i)
+		local befehl = parse_zeile(marken, imms, zeilen[i], anz + 1)
 		if befehl[1] then
 			anz = anz + 1
 			liste[anz] = befehl
