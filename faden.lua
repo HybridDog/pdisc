@@ -2,7 +2,11 @@ local function befehl_ausfuhren(faden)
 	local is = faden.is
 	local imms = faden.imms
 	local vars = faden.vars
-	local befehl, args = unpack(faden.liste[faden.ip])
+	local anw = faden.liste[faden.ip]
+	if not anw then
+		return false, "Invalid instruction pointer"
+	end
+	local befehl, args = unpack(anw)
 	for i = 1,#is do
 		local bfunk = is[i][befehl]
 		if bfunk then
@@ -64,8 +68,9 @@ return function(faden_manip, parsed)
 		log = "",
 		vars = {pi = math.pi},
 		ip = 1,
-		sp = 50,
-		sb = 50,
+		sp = 3500,
+		sb = 3500,
+		strlen_max = 2000,
 		stack = {},
 		is = {pdisc.standard_befehlssatz},
 		suscitate = programm_ausfuhren,
@@ -93,6 +98,12 @@ return function(faden_manip, parsed)
 	if parsed then
 		faden.imms = parsed[1]
 		faden.liste = parsed[2]
+		if not faden.liste[1] then
+			faden.suscitate = function(self)
+				self.log = self.log .. "Nothing to execute.\n"
+				self:exit()
+			end
+		end
 	end
 	faden_manip(faden)
 	return faden
