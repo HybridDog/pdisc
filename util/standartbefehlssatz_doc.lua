@@ -41,13 +41,14 @@ local instr = {
 	{"flush", "", "Output the log, this should vary for every mod."},
 }
 
+--[[
 local mbl = 0
 local mal = 0
 for i = 1,#instr do
 	local bef = instr[i]
 	mbl = math.max(#bef[1], mbl)
 	mal = math.max(#bef[2], mal)
-end
+end--]]
 
 local mtl = 2
 
@@ -60,7 +61,8 @@ end
 o = o .. "\n\nInstructions:\n\n"
 for i = 1,#instr do
 	i = instr[i]
-	o = o .. i[1] .. (" "):rep(mbl - #i[1] + 2) .. i[2] .. (" "):rep(mal - #i[2] + 2) .. i[3] .. "\n"
+	o = o .. i[1] .. "  " .. i[2] .. "\n"
+		.. "  " .. i[3] .. "\n\n"
 end
 
 print(o)
