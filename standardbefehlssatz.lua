@@ -12,6 +12,15 @@ s = {
 		return true, params[2]
 	end,
 
+	getvar = function(params, faden)
+		local p = params[1]
+		if type(p) ~= "string" then
+			return false, UAT
+		end
+		p = faden.vars[p]
+		return true, {p, params[2] and p ~= nil}
+	end,
+
 	add = function(params, faden)
 		if #params ~= 2 then
 			return false, WNOA
@@ -144,7 +153,7 @@ s = {
 		if not subsucc then
 			return false, SE .. msg
 		end
-		subsucc,msg = s.jmp({msg}, faden)
+		subsucc,msg = s.jmp(msg, faden)
 		if not subsucc then
 			return false, SE .. msg
 		end
@@ -194,8 +203,14 @@ s = {
 			return false, WNOA
 		end
 		local p1,p2 = unpack(params)
-		if type(p1) ~= "number"
-		or type(p2) ~= "number" then
+		local t1 = type(p1)
+		local t2 = type(p2)
+		if t1 ~= t2 then
+			return false, "different argument types"
+		end
+
+		if t1 ~= "number"
+		and t1 ~= "string" then
 			return false, UAT
 		end
 		return true, p1 < p2
