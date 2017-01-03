@@ -27,20 +27,16 @@ local function befehl_ausfuhren(faden)
 			if not weiter then
 				return false, "Command " .. befehl .. ": " .. ergebnis
 			end
-			if ergebnis ~= nil then
+			if args
+			and ergebnis ~= nil then
 				if type(ergebnis) ~= "table" then
 					ergebnis = {ergebnis}
 				end
 				for i,v in pairs(ergebnis) do
-					if not ersetzbar[i] then
-						-- message sometimes incorrect
-						return false, "Command " .. befehl .. ": Attempt on changing an immediate"
+					if args[i]
+					and ersetzbar[i] then
+						vars[args[i]] = v
 					end
-					if not args[i] then
-						-- can this happen? Is it a mistake in instruction set? bef ,b,,d
-						return false, "Command " .. befehl .. ": Missing target argument"
-					end
-					vars[args[i]] = v
 				end
 			end
 			faden.ip = faden.ip + 1

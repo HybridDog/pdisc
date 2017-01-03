@@ -237,7 +237,7 @@ s = {
 		if type(p) ~= "number" then
 			return false, UAT
 		end
-		subsucc,msg = s.usleep({p * 1000000}, faden)
+		local subsucc,msg = s.usleep({p * 1000000}, faden)
 		if not subsucc then
 			return false, SE .. msg
 		end

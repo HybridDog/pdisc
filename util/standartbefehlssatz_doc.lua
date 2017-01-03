@@ -62,7 +62,7 @@ o = o .. "\n\nInstructions:\n\n"
 for i = 1,#instr do
 	i = instr[i]
 	o = o .. i[1] .. "  " .. i[2] .. "\n"
-		.. "  " .. i[3] .. "\n\n"
+		.. "  " .. i[3] .. "\n\n" -- TODO: max 80 letters each line
 end
 
 print(o)
