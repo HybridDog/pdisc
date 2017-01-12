@@ -6,9 +6,6 @@ local STRL = "attempt on exceeding maximum string length"
 local s
 s = {
 	mov = function(params)
-		if #params ~= 2 then
-			return false, WNOA
-		end
 		return true, params[2]
 	end,
 
@@ -18,17 +15,13 @@ s = {
 			return false, UAT
 		end
 		p = faden.vars[p]
-		return true, {p, params[2] and p ~= nil}
+		return true, {p, p ~= nil}
 	end,
 
 	add = function(params, faden)
-		if #params ~= 2 then
-			return false, WNOA
-		end
 		local p1,p2 = unpack(params)
 		local t1 = type(p1)
-		local t2 = type(p2)
-		if t1 ~= t2 then
+		if t1 ~= type(p2) then
 			return false, "different argument types"
 		end
 
@@ -38,16 +31,16 @@ s = {
 		if t1 == "boolean" then
 			return true, p1 and p2
 		end
-		if #p1 + #p2 > faden.strlen_max then
-			return false, STRL
+		if t1 == "string" then
+			if #p1 + #p2 > faden.strlen_max then
+				return false, STRL
+			end
+			return true, p1 .. p2
 		end
-		return true, p1 .. p2
+		return false, UAT
 	end,
 
 	mul = function(params)
-		if #params ~= 2 then
-			return false, WNOA
-		end
 		local p1,p2 = unpack(params)
 		local t1 = type(p1)
 		local t2 = type(p2)
@@ -72,9 +65,6 @@ s = {
 	end,
 
 	neg = function(params)
-		if #params ~= 1 then
-			return false, WNOA
-		end
 		local v = params[1]
 		local t = type(v)
 		if t == "number" then
@@ -83,13 +73,13 @@ s = {
 		if t == "boolean" then
 			return true, not v
 		end
-		return true, v:rev()
+		if t == "string" then
+			return true, v:rev()
+		end
+		return false, UAT
 	end,
 
 	inv = function(params)
-		if #params ~= 1 then
-			return false, WNOA
-		end
 		local p = params[1]
 		if type(p) ~= "number" then
 			return false, UAT
@@ -98,24 +88,18 @@ s = {
 	end,
 
 	mod = function(params)
-		if #params ~= 2 then
-			return false, WNOA
-		end
 		local p1,p2 = unpack(params)
-		if type(p1) ~= "number" or type(p2) ~= "number" then
+		if type(p1) ~= "number"
+		or type(p2) ~= "number" then
 			return false, UAT
 		end
 		return true, p1 % p2
 	end,
 
 	jmp = function(params, faden)
-		local pcnt = #params
-		if pcnt == 2 then
-			if not params[2] then
-				return true
-			end
-		elseif pcnt ~= 1 then
-			return false, WNOA
+		if #params >= 2
+		and not params[2] then
+			return true
 		end
 		local p = params[1]
 		if type(p) ~= "number" then
@@ -134,9 +118,6 @@ s = {
 	end,
 
 	call = function(params, faden)
-		if #params ~= 1 then
-			return false, WNOA
-		end
 		local subsucc,msg = s.push(faden.ip + 1, faden)
 		if not subsucc then
 			return false, SE .. msg
@@ -192,20 +173,13 @@ s = {
 	end,
 
 	equal = function(params)
-		if #params ~= 2 then
-			return false, WNOA
-		end
 		return true, params[1] == params[2]
 	end,
 
 	less = function(params)
-		if #params ~= 2 then
-			return false, WNOA
-		end
 		local p1,p2 = unpack(params)
 		local t1 = type(p1)
-		local t2 = type(p2)
-		if t1 ~= t2 then
+		if t1 ~= type(p2) then
 			return false, "different argument types"
 		end
 
@@ -217,9 +191,6 @@ s = {
 	end,
 
 	usleep = function(params, faden)
-		if #params ~= 1 then
-			return false, WNOA
-		end
 		local p = params[1]
 		if type(p) ~= "number" then
 			return false, UAT
@@ -230,16 +201,13 @@ s = {
 	end,
 
 	sleep = function(params, faden)
-		if #params ~= 1 then
-			return false, WNOA
-		end
 		local p = params[1]
 		if type(p) ~= "number" then
 			return false, UAT
 		end
 		local subsucc,msg = s.usleep({p * 1000000}, faden)
 		if not subsucc then
-			return false, SE .. msg
+			error(SE .. msg)
 		end
 		return true
 	end,
@@ -249,9 +217,6 @@ s = {
 	end,
 
 	tostring = function(params)
-		if #params ~= 1 then
-			return false, WNOA
-		end
 		return true, tostring(params[1])
 	end,
 
@@ -273,12 +238,9 @@ local so_math_fcts = {"sin", "asin", "cos", "acos", "tan", "atan", "exp", "log",
 for i = 1,#so_math_fcts do
 	i = so_math_fcts[i]
 	s[i] = function(params)
-		if #params ~= 1 then
-			return false, WNOA
-		end
 		local p = params[1]
 		if type(p) ~= "number" then
-			return false, UAT
+			return false, "this arithmetic function needs a number as argument"
 		end
 		return true, math[i](p)
 	end
@@ -288,13 +250,10 @@ local to_math_fcts = {"pow"}
 for i = 1,#to_math_fcts do
 	i = to_math_fcts[i]
 	s[i] = function(params)
-		if #params ~= 2 then
-			return false, WNOA
-		end
 		local p1,p2 = unpack(params)
 		if type(p1) ~= "number"
 		or type(p2) ~= "number" then
-			return false, UAT
+			return false, "this arithmetic function needs 2 numbers as args"
 		end
 		return true, math[i](p1, p2)
 	end

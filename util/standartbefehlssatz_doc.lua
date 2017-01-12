@@ -26,7 +26,7 @@ local instr = {
 	{"inv", "<vn num>", "num = 1 / num"},
 	{"mod", "<vn num>, <n dv>", "num = num % dv"},
 	{"jmp", "<ui p>[, <e c>]", "If c is not false, the instruction pointer is set to p. To disallow infinite loops, the program is interrupted after changing the ip, the mod should then consider restarting it."},
-	{"call", "<ui p>", "push the ip, then jmp p; used to execute subroutines"},
+	{"call", "<ui p>[, <e c>]", "push the ip, then jmp p; used to execute subroutines"},
 	{"ret", "", "pop something, then jmp there; used to exit subroutines"},
 	{"push", "<e a>[, <e b>[, <e c>[…]]]", "put values onto the stack; from left to right"},
 	{"pop", "<v a>[, <v b>[, <v c>[…]]]", "takes values from the stack and sets the passed variables to them; from left to right"},
