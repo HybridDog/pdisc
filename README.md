@@ -145,4 +145,4 @@ end
 
 TODO:  
 * add string. instructions
-* add inc,dec,sub,div
+* metatable

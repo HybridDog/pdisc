@@ -9,6 +9,10 @@ s = {
 		return true, params[2]
 	end,
 
+	xchg = function(params)
+		return true, params[2], params[1]
+	end,
+
 	getvar = function(params, faden)
 		local p = params[1]
 		if type(p) ~= "string" then
@@ -29,7 +33,12 @@ s = {
 			return true, p1 + p2
 		end
 		if t1 == "boolean" then
-			return true, p1 and p2
+			for _,k in pairs(params) do
+				if k then
+					return true, true
+				end
+			end
+			return true, false
 		end
 		if t1 == "string" then
 			if #p1 + #p2 > faden.strlen_max then
@@ -38,6 +47,22 @@ s = {
 			return true, p1 .. p2
 		end
 		return false, UAT
+	end,
+
+	sub = function(params)
+		local b = params[2]
+		b = b and tonumber(b)
+		local t2 = type(b)
+		if t2 ~= "number" then
+			return false, UAT
+		end
+		local t1 = type(params[1])
+		if t1 == "number" then
+			return true, params[1] - b
+		end
+		if t1 == "string" then
+			return true, params[1]:sub(b, params[3] and tonumber(params[3]))
+		end
 	end,
 
 	mul = function(params)
@@ -59,9 +84,37 @@ s = {
 			return true, p1 * p2
 		end
 		if t1 == "boolean" then
-			return true, p1 or p2
+			for _,k in pairs(params) do
+				if not k then
+					return true, false
+				end
+			end
+			return true, p1 and p2 -- nil is tested in the first two params
 		end
 		return false, UAT
+	end,
+
+	div = function(params)
+		local p1,p2 = unpack(params)
+		if type(p1) ~= "number"
+		or type(p2) ~= "number" then
+			return false, UAT
+		end
+		return true, p1 / p2
+	end,
+
+	inc = function(params)
+		if type(params[1]) ~= "number" then
+			return false, UAT
+		end
+		return true, params[1] + 1
+	end,
+
+	dec = function(params)
+		if type(params[1]) ~= "number" then
+			return false, UAT
+		end
+		return true, params[1] - 1
 	end,
 
 	neg = function(params)
@@ -74,7 +127,7 @@ s = {
 			return true, not v
 		end
 		if t == "string" then
-			return true, v:rev()
+			return true, v:rev() -- does string.rev exist?
 		end
 		return false, UAT
 	end,
@@ -190,6 +243,10 @@ s = {
 		return true, p1 < p2
 	end,
 
+	greater = function(params)
+		return s.less{params[2], params[1]}
+	end,
+
 	usleep = function(params, faden)
 		local p = params[1]
 		if type(p) ~= "number" then
@@ -217,7 +274,15 @@ s = {
 	end,
 
 	tostring = function(params)
-		return true, tostring(params[1])
+		return true, params[1] and tostring(params[1]) or nil
+	end,
+
+	tonumber = function(params)
+		return true, params[1] and tonumber(params[1])
+	end,
+
+	toboolean = function(params)
+		return true, params[1] and true or false
 	end,
 
 	print = function(params, faden)
@@ -258,5 +323,21 @@ for i = 1,#to_math_fcts do
 		return true, math[i](p1, p2)
 	end
 end
+
+local abbreviations = {
+	mov = ":=",
+	add = "+",
+	sub = "-",
+	mul = "*",
+	div = "/",
+	inc = "++",
+	dec = "--",
+	neg = "!",
+	less = "<",
+	equal = "==",
+	jmp = "@",
+	usleep = "...",
+}
+-- TODO set metatable
 
 return s

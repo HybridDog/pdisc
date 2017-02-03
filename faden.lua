@@ -85,7 +85,9 @@ return function(faden_manip, parsed)
 		try_rebirth = function(self)
 			if minetest.get_us_time() >= self.rebirth then
 				self:continue()
+				return true
 			end
+			return false
 		end,
 		exit = function(self)
 			self:flush()
