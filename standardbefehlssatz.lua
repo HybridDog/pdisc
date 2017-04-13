@@ -195,7 +195,7 @@ s = {
 	end,
 
 	call = function(params, faden)
-		local subsucc,msg = s.push(faden.ip + 1, faden)
+		local subsucc,msg = s.push({faden.ip+1}, faden)
 		if not subsucc then
 			return false, SE .. msg
 		end
