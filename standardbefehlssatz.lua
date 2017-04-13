@@ -22,6 +22,30 @@ s = {
 		return true, {p, p ~= nil}
 	end,
 
+	copytable = function(params, thread)
+		if type(params[1]) ~= "string"
+		or type(params[2]) ~= "string" then
+			return false, "two strings expected"
+		end
+		local fromprefix = params[2] .. "."
+		local toprefix = params[1] .. "."
+		if fromprefix == toprefix then
+			return false, "origin and target table names must be different"
+		end
+		local tocopy = {}
+		local frmln = #fromprefix
+		for name,v in pairs(thread.vars) do
+			if name:sub(1, frmln) == fromprefix then
+				tocopy[#tocopy+1] = name:sub(frmln+1)
+			end
+		end
+		for i = 1,#tocopy do
+			local field = tocopy[i]
+			thread.vars[toprefix .. field] = thread.vars[fromprefix .. field]
+		end
+		return true
+	end,
+
 	add = function(params, faden)
 		local p1,p2 = unpack(params)
 		local t1 = type(p1)

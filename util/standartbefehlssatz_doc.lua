@@ -15,6 +15,7 @@ local instr = {
 	{"mov", "<v to>, <e from>", "Copies from into to."},
 	{"xchg", "<v a>, <v b>", "Switches a with b."},
 	{"getvar", "<vs varname>[, <ve exists>]", "Sets varname to the current variable called <varname> if it's set. If exists is passed, it's set to a bool indicating whether the variable was set."},
+	{"copytable", "<s target>, <s origin>", "Copies ${origin}.* to ${target}.*."},
 	{"add", "<vn to>, <n from>", "to += from"},
 	{"add", "<vb to>[, <b ba>[, <b bb>[…]]]", "to indicates whether at least one of the arguments is true"},
 	{"add", "<vs to>, <s from>", "to = to .. from"},
