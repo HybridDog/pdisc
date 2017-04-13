@@ -56,20 +56,39 @@ local function parse_zeile(marken, imms, z, ip)
 	return {befehl, args}
 end
 
+local function zeileniter(text)
+	return function()
+		if not text then
+			return
+		end
+		local umbruch = text:find"\n"
+		if not umbruch then
+			local rv = text
+			text = nil
+			return rv
+		end
+		local rv = text:sub(1, umbruch-1)
+		text = text:sub(umbruch+1)
+		return rv
+	end
+end
+
 return function(programm)
 	local imms = {}
 	local marken = {}
 
 	-- Programm erkennen
-	local zeilen = programm:split"\n"
 	local anz = 0
 	local liste = {}
-	for i = 1,#zeilen do
-		local befehl = parse_zeile(marken, imms, zeilen[i], anz + 1)
+	local zn = 1
+	for zeile in zeileniter(programm) do
+		local befehl = parse_zeile(marken, imms, zeile, anz + 1)
 		if befehl[1] then
+			befehl[3] = zn  -- Zeilennummer für Fehlernachrichten
 			anz = anz + 1
 			liste[anz] = befehl
 		end
+		zn = zn+1
 	end
 	local immn = #imms+1
 
