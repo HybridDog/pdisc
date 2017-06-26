@@ -8,6 +8,7 @@ true/false: boolean (immediate)
 12.6: number (immediate)  
 $hello nwae: string (immediate)  
 nodolla: either a label is called so (immediate) or it's a variable
+If you want to use : in a string, you need to put it at the beginning of the line to not treat the left part as label
 
 ```
 Types:

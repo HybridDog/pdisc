@@ -37,9 +37,9 @@ local function parse_zeile(marken, imms, z, ip)
 			local arg = args[i]:trim()
 			if #arg == 0
 			or arg == "false" then
-				arg = false
+				arg = -1
 			elseif arg == "true" then
-				arg = true
+				arg = -2
 			elseif arg:sub(1, 1) == "$" then
 				imms[immn] = arg:sub(2)
 				arg = immn
@@ -74,7 +74,7 @@ local function zeileniter(text)
 end
 
 return function(programm)
-	local imms = {}
+	local imms = {[-2] = true, [-1] = false}
 	local marken = {}
 
 	-- Programm erkennen

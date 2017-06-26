@@ -31,7 +31,7 @@ local instr = {
 	{"neg", "<vb var>", "var = not var"},
 	{"neg", "<vs str>", "str = str:rev()"},
 	{"inv", "<vn num>", "num = 1 / num"},
-	{"mod", "<vn num>, <n dv>", "num = num % dv"},
+	{"mod", "<vn num>, <n dv>", "num = num mod dv"},
 	{"jmp", "<ui p>[, <e c>]", "If c is not false, the instruction pointer is set to p. To disallow infinite loops, the program is interrupted after changing the ip, the mod should then consider restarting it."},
 	{"call", "<ui p>[, <e c>]", "push the ip, then jmp p; used to execute subroutines"},
 	{"ret", "", "pop something, then jmp there; used to exit subroutines"},
