@@ -298,11 +298,11 @@ s = {
 	end,
 
 	tostring = function(params)
-		return true, params[1] and tostring(params[1]) or nil
+		return true, tostring(params[1])
 	end,
 
 	tonumber = function(params)
-		return true, params[1] and tonumber(params[1])
+		return true, tonumber(params[1])
 	end,
 
 	toboolean = function(params)
