@@ -72,7 +72,7 @@ toboolean | `<v var>` | If *var* is `false` or not defined, it's set to `false`,
 print | `<e a>[, <e b>[, <e c>[…]]]` | adds variables to the log, seperated by \t (tab), \n (newline) is added at the end
 flush | no arguments | Output the log, what exactly happens should vary for every mod.
 
-Note to Developers: Do not edit the instructions manually here in the Readme, do changes in util/standartbefehlssatz_doc.lua and execute it.
+<!-- Note to Developers: Do not edit the instructions manually here in the Readme, do changes in util/standartbefehlssatz_doc.lua and execute it. -->
 
 
 

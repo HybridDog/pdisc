@@ -82,9 +82,9 @@ for i = 1,#instr do
 end
 
 o = o ..
-	"\nNote to Developers: Do not edit the instructions manually " ..
+	"\n<!-- Note to Developers: Do not edit the instructions manually " ..
 	"here in the Readme, do changes in util/standartbefehlssatz_doc.lua and " ..
-	"execute it.\n"
+	"execute it. -->\n"
 
 io.write(o)
 io.flush()
