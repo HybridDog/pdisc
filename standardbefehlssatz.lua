@@ -34,7 +34,7 @@ s = {
 		end
 		local tocopy = {}
 		local frmln = #fromprefix
-		for name,v in pairs(thread.vars) do
+		for name in pairs(thread.vars) do
 			if name:sub(1, frmln) == fromprefix then
 				tocopy[#tocopy+1] = name:sub(frmln+1)
 			end
@@ -89,7 +89,7 @@ s = {
 		end
 	end,
 
-	mul = function(params)
+	mul = function(params, faden)
 		local p1,p2 = unpack(params)
 		local t1 = type(p1)
 		local t2 = type(p2)
